@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Progress Bar</title>
+    <style>
+        body {
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            padding: 0px;
+            background: #333;
+            color: #f8f9fa;
+        }
+
+        .progress-container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0px auto;
+            background: #e0e0e0;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar {
+            height: 30px;
+            background-color: #a984e5;
+            width: 0%;
+            text-align: center;
+            line-height: 30px;
+            color: #333;
+            font-weight: bold;
+            transition: width 0.5s ease;
+        }
+
+        .info {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Progress Bar</h2>
+
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar">0%</div>
+    </div>
+
+    <div class="info" id="dateLabels"></div>
+    <div class="info" id="remainingTime"></div>
+
+    <script>
+        // CONFIGURAÇÕES
+        const startDate = new Date("2025-02-18"); // data de início
+        const totalMonths = 30; // 2 anos e 6 meses = 30 meses
+        const now = new Date();
+
+        const endDate = new Date(startDate);
+        endDate.setMonth(endDate.getMonth() + totalMonths);
+
+        // Cálculo de progresso
+        const totalDuration = endDate - startDate;
+        const elapsed = now - startDate;
+        const percentage = Math.min(100, Math.max(0, (elapsed / totalDuration) * 100)).toFixed(1);
+
+        // Atualiza a barra de progresso
+        const progressBar = document.getElementById("progressBar");
+        progressBar.style.width = percentage + "%";
+        progressBar.textContent = percentage + "%";
+
+        // Formatação das datas
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        document.getElementById("dateLabels").innerHTML =
+            `Início: ${startDate.toLocaleDateString('pt-BR', options)}<br>Fim: ${endDate.toLocaleDateString('pt-BR', options)}`;
+
+        // Cálculo dos meses restantes
+        const yearDiff = endDate.getFullYear() - now.getFullYear();
+        const monthDiff = endDate.getMonth() - now.getMonth();
+        const dayDiff = endDate.getDate() - now.getDate();
+
+        let monthsRemaining = yearDiff * 12 + monthDiff;
+        if (dayDiff < 0) monthsRemaining -= 1; // se o dia do mês ainda não chegou, reduz um mês
+
+        // Evita números negativos
+        monthsRemaining = Math.max(0, monthsRemaining);
+
+        document.getElementById("remainingTime").textContent = `Faltam ${monthsRemaining} mês(es) para acabar.`;
+    </script>
+
+</body>
+
+</html>
